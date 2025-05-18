@@ -16,21 +16,6 @@ export function pathnameToSegments(
     href: "/",
   };
 
-  console.log(
-    "wrong",
-    pathname,
-    pathname
-      .split("/")
-      .filter((segment) => segment)
-      .map((segment, index) => ({
-        name: customBreadcrumb?.[segment] || capitalizeFirstLetter(segment),
-        href: `/${pathname
-          .split("/")
-          .slice(0, index + 1)
-          .join("/")}`,
-      })),
-  );
-
   return [
     homeSegment,
     ...pathname
@@ -45,4 +30,12 @@ export function pathnameToSegments(
 
 export function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function getUppercaseInitials(name: string) {
+  const names = name.split(" ");
+  if (names.length === 1) {
+    return names[0].charAt(0).toUpperCase();
+  }
+  return names[0].charAt(0).toUpperCase() + names[1].charAt(0).toUpperCase();
 }
