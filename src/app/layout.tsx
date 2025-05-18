@@ -43,7 +43,7 @@ export default function RootLayout({
       >
         <Providers>
           <AppSidebar />
-          <SidebarInset className="bg-background text-foreground flex w-full flex-col p-3 font-sans">
+          <SidebarInset className="bg-background text-foreground flex w-full flex-col p-4 font-sans">
             <Header />
             {children}
           </SidebarInset>
