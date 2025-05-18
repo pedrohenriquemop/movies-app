@@ -1,13 +1,16 @@
+import { BreadcrumbProvider } from "@/components/contexts/breadcrumb-context";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from "next-themes";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 const Providers = ({ children }: { children: ReactNode }) => {
   return (
     <SidebarProvider>
-      <ThemeProvider attribute={"class"} enableSystem>
-        {children}
-      </ThemeProvider>
+      <BreadcrumbProvider>
+        <ThemeProvider attribute={"class"} enableSystem>
+          {children}
+        </ThemeProvider>
+      </BreadcrumbProvider>
     </SidebarProvider>
   );
 };

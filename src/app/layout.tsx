@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Roboto, Roboto_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
+import Header from "@/components/header";
 import { SidebarInset } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/AppSidebar";
+import AppSidebar from "@/components/app-sidebar";
 import Providers from "./providers";
 
 const robotoSans = Roboto({
@@ -45,7 +45,7 @@ export default function RootLayout({
           <AppSidebar />
           <SidebarInset className="bg-background text-foreground flex w-full flex-col p-3 font-sans">
             <Header />
-            <main>{children}</main>
+            {children}
           </SidebarInset>
         </Providers>
       </body>

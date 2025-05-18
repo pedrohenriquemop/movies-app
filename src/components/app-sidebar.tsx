@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, List, User } from "lucide-react";
+import { Film, Home, List, LucideIcon, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -8,48 +8,58 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar";
 
-const routes = [
+const routes: {
+  name: string;
+  href: string;
+  icon: LucideIcon;
+}[] = [
   {
     name: "Home",
     href: "/",
-    icon: <Home />,
+    icon: Home,
+  },
+  {
+    name: "Movies",
+    href: "/movies",
+    icon: Film,
   },
   {
     name: "Lists",
     href: "/lists",
-    icon: <List />,
+    icon: List,
   },
   {
     name: "Profile",
     href: "/profile",
-    icon: <User />,
+    icon: User,
   },
 ];
 
 const AppSidebar = () => {
   const pathname = usePathname();
 
-  // throw new Error("Test error");
-
   return (
     <Sidebar variant="inset" collapsible="icon">
       <SidebarHeader />
       <SidebarContent>
+        <SidebarGroupLabel>Menu</SidebarGroupLabel>
         <SidebarMenu>
           {routes.map((route, index) => (
             <SidebarMenuItem key={index}>
-              <SidebarMenuButton asChild>
-                <Link
-                  href={route.href}
-                  className={pathname === route.href ? "underline" : ""}
-                >
-                  {route.icon} {route.name}
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === route.href}
+                tooltip={route.name}
+              >
+                <Link href={route.href}>
+                  <route.icon /> <span>{route.name}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
