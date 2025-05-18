@@ -13,6 +13,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "./ui/sidebar";
 import { Separator } from "./ui/separator";
 
@@ -46,6 +47,8 @@ const routes: {
 const AppSidebar = () => {
   const pathname = usePathname();
 
+  const { state } = useSidebar();
+
   return (
     <Sidebar variant="inset" collapsible="icon">
       <SidebarHeader>
@@ -66,18 +69,25 @@ const AppSidebar = () => {
         </SidebarMenu>
       </SidebarHeader>
       <Separator />
-      <SidebarContent>
+      <SidebarContent className="gap-2">
         <SidebarGroupLabel>Menu</SidebarGroupLabel>
-        <SidebarMenu>
+        <SidebarMenu className="gap-1">
           {routes.map((route, index) => (
-            <SidebarMenuItem key={index}>
+            <SidebarMenuItem
+              key={index}
+              className={`${state === "collapsed" ? "px-2" : "px-1"} transition-[padding] duration-100`}
+            >
               <SidebarMenuButton
                 asChild
                 isActive={pathname === route.href}
                 tooltip={route.name}
+                size="lg"
               >
                 <Link href={route.href}>
-                  <route.icon /> <span>{route.name}</span>
+                  <div className="flex aspect-square items-center justify-center rounded-lg p-2">
+                    <route.icon className="size-4" />
+                  </div>
+                  <span>{route.name}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
