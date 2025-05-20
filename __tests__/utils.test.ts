@@ -1,10 +1,9 @@
+import "@testing-library/jest-dom";
 import {
   capitalizeFirstLetter,
   getUppercaseInitials,
   pathnameToSegments,
 } from "@/lib/utils";
-
-import "jest";
 
 describe("capitalizeFirstLetter", () => {
   it("capitalizes the first letter of a lowercase word", () => {
