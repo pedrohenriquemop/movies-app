@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import AppBreadcrumb from "./app-breadcrumb";
+import AppBreadcrumb from "./AppBreadcrumb/app-breadcrumb";
 import ThemeToggle from "./theme-toggle";
 import { SidebarTrigger } from "./ui/sidebar";
 import { pathnameToSegments } from "@/lib/utils";

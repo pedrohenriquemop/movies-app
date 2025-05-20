@@ -1,4 +1,4 @@
-import { PathSegment } from "@/components/app-breadcrumb";
+import { PathSegment } from "@/components/AppBreadcrumb/app-breadcrumb";
 import { BreadcrumbContextData } from "@/components/contexts/breadcrumb-context";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";

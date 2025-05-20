@@ -6,13 +6,9 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "./ui/breadcrumb";
+} from "../ui/breadcrumb";
 import Link from "next/link";
-
-export type PathSegment = {
-  name: string;
-  href: string;
-};
+import { PathSegment } from "./types";
 
 interface Props {
   pathSegments: PathSegment[];
