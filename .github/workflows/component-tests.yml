@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
 jobs:
-  component-tests:
+  setup:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,29 +17,59 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 23
 
-      - uses: pnpm/action-setup@v2
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
         with:
           version: 10
+
+      - name: Get pnpm store path
+        id: pnpm-cache-path
+        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
 
       - name: Cache pnpm store
         uses: actions/cache@v4
         with:
-          path: ~/.pnpm-store
+          path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Cache Cypress binary
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/Cypress
-          key: cypress-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            cypress-${{ runner.os }}-
-
       - name: Install dependencies
+        run: pnpm install
+
+      - name: Upload pnpm store
+        uses: actions/upload-artifact@v4
+        with:
+          name: pnpm-store
+          path: ${{ env.STORE_PATH }}
+
+  component-tests:
+    needs: setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 23
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Download pnpm store
+        uses: actions/download-artifact@v4
+        with:
+          name: pnpm-store
+          path: ~/.local/share/pnpm/store
+
+      - name: Install dependencies (skip if already installed)
         run: pnpm install
 
       - name: Install Cypress binary
