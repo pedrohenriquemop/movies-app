@@ -1,4 +1,4 @@
-name: Run Component Tests
+name: Run Component and Unit tests
 
 on:
   push:
@@ -44,6 +44,36 @@ jobs:
         with:
           name: pnpm-store
           path: ${{ env.STORE_PATH }}
+
+  unit-tests:
+    needs: setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 23
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Download pnpm store
+        uses: actions/download-artifact@v4
+        with:
+          name: pnpm-store
+          path: ~/.local/share/pnpm/store
+
+      - name: Install dependencies (skip if already installed)
+        run: pnpm install
+
+      - name: Run unit tests
+        run: pnpm test
 
   component-tests:
     needs: setup
