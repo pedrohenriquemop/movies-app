@@ -33,15 +33,12 @@ describe("MovieCard", () => {
   });
 
   it("renders the IMDb link with correct href and text", () => {
-    cy.get("a").contains("View on IMDb").should("exist");
-    cy.get("a")
-      .contains("View on IMDb")
-      .should(
-        "have.attr",
-        "href",
-        `https://www.imdb.com/title/${mockMovie.imdb_id}`,
-      );
-    cy.get("a").contains("View on IMDb").find("svg").should("exist");
+    cy.contains("a", "View on IMDb").should(
+      "have.attr",
+      "href",
+      `https://www.imdb.com/title/${mockMovie.imdb_id}`,
+    );
+    cy.contains("a", "View on IMDb").find("svg").should("exist");
   });
 
   it("applies line-clamp-3 to the overview", () => {
