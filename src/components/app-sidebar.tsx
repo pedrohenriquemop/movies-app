@@ -139,6 +139,7 @@ const AppSidebar = () => {
                     isActive={pathname === route.href && !isDisabled}
                     tooltip={route.name}
                     disabled={isDisabled}
+                    size="lg"
                   >
                     <Link {...linkProps}>
                       <div className="flex aspect-square items-center justify-center rounded-lg p-2">
