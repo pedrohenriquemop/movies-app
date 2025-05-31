@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { MovieList } from "@/lib/mock-data";
 import { PlusIcon, ChevronDownIcon } from "lucide-react";
 import {
   DropdownMenu,
@@ -18,7 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MovieList } from "@/lib/mock-data";
+import { useNotification } from "@/hooks/use-notification";
 
 interface AddToListDialogProps {
   isOpen: boolean;
@@ -33,9 +34,9 @@ const AddToListDialog = ({
   movieId,
   userId,
 }: AddToListDialogProps) => {
+  const { notify } = useNotification();
   const [userLists, setUserLists] = useState<MovieList[]>([]);
   const [newListName, setNewListName] = useState("");
-  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -45,32 +46,30 @@ const AddToListDialog = ({
         return;
       }
       setIsLoading(true);
-      setMessage("");
       try {
         const response = await fetch(`/api/lists?userId=${userId}`);
         if (response.ok) {
           const lists: MovieList[] = await response.json();
           setUserLists(lists);
         } else {
-          setMessage("Failed to fetch lists.");
+          notify("Failed to fetch lists.", { type: "error" });
         }
       } catch {
-        setMessage("Network error fetching lists.");
+        notify("Network error fetching lists.", { type: "error" });
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchUserLists();
-  }, [userId, isOpen]);
+  }, [userId, isOpen, notify]);
 
   const handleCreateList = async () => {
     if (!userId) return;
     if (!newListName.trim()) {
-      setMessage("List name cannot be empty.");
+      notify("List name cannot be empty.", { type: "warning" });
       return;
     }
-    setMessage("");
     try {
       const response = await fetch("/api/lists", {
         method: "POST",
@@ -84,35 +83,38 @@ const AddToListDialog = ({
         const newList: MovieList = await response.json();
         setUserLists((prev) => [...prev, newList]);
         setNewListName("");
-        setMessage(`List "${newList.name}" created successfully!`);
+        notify(`List "${newList.name}" created successfully!`, {
+          type: "success",
+        });
       } else {
-        setMessage("Failed to create list.");
+        notify("Failed to create list.", { type: "error" });
       }
     } catch {
-      setMessage("Network error creating list.");
+      notify("Network error creating list.", { type: "error" });
     }
   };
 
   const handleAddMovieToList = async (listId: string, listName: string) => {
     if (!userId) return;
-    setMessage("");
     try {
       const response = await fetch(`/api/lists/${listId}/movies`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ movieId, userId }), // Pass userId in body
+        body: JSON.stringify({ movieId, userId }),
       });
 
       if (response.ok) {
-        setMessage(`Movie added to "${listName}" successfully!`);
+        notify(`Movie added to "${listName}" successfully!`, {
+          type: "success",
+        });
         onClose();
       } else {
-        setMessage("Failed to add movie to list.");
+        notify("Failed to add movie to list.", { type: "error" });
       }
     } catch {
-      setMessage("Network error adding movie to list.");
+      notify("Network error adding movie to list.", { type: "error" });
     }
   };
 
@@ -130,9 +132,6 @@ const AddToListDialog = ({
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          {message && (
-            <p className="text-center text-sm text-red-500">{message}</p>
-          )}
           <div className="flex items-center space-x-2">
             <Input
               placeholder="New list name"

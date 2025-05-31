@@ -5,6 +5,7 @@ import Header from "@/components/header";
 import { SidebarInset } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/app-sidebar";
 import Providers from "./providers";
+import { Toaster } from "@/components/ui/sonner";
 
 const robotoSans = Roboto({
   variable: "--font-roboto-sans",
@@ -46,6 +47,7 @@ export default function RootLayout({
           <SidebarInset className="bg-background text-foreground flex w-full flex-col p-4 font-sans">
             <Header />
             {children}
+            <Toaster />
           </SidebarInset>
         </Providers>
       </body>

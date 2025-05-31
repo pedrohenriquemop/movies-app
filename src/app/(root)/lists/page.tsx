@@ -28,13 +28,14 @@ import {
 import { MovieMetadata } from "@/components/movies-grid";
 import Link from "next/link";
 import moviesData from "../../../../public/data/movies.json";
+import { useNotification } from "@/hooks/use-notification";
 
 const ListsPage = () => {
   const { isLoggedIn, user } = useAuth();
   const router = useRouter();
+  const { notify } = useNotification();
   const [lists, setLists] = useState<MovieList[]>([]);
   const [newListName, setNewListName] = useState("");
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
   const allMovies: MovieMetadata[] = moviesData as MovieMetadata[];
@@ -45,21 +46,20 @@ const ListsPage = () => {
       return;
     }
     setLoading(true);
-    setMessage("");
     try {
       const response = await fetch(`/api/lists?userId=${user.id}`);
       if (response.ok) {
         const data: MovieList[] = await response.json();
         setLists(data);
       } else {
-        setMessage("Failed to fetch lists.");
+        notify("Failed to fetch lists.", { type: "error" });
       }
     } catch {
-      setMessage("Network error fetching lists.");
+      notify("Network error fetching lists.", { type: "error" });
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, notify]);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -72,10 +72,9 @@ const ListsPage = () => {
   const handleCreateList = async () => {
     if (!user?.id) return;
     if (!newListName.trim()) {
-      setMessage("List name cannot be empty.");
+      notify("List name cannot be empty.", { type: "warning" });
       return;
     }
-    setMessage("");
     try {
       const response = await fetch("/api/lists", {
         method: "POST",
@@ -89,18 +88,19 @@ const ListsPage = () => {
         const newList: MovieList = await response.json();
         setLists((prev) => [...prev, newList]);
         setNewListName("");
-        setMessage(`List "${newList.name}" created successfully!`);
+        notify(`List "${newList.name}" created successfully!`, {
+          type: "success",
+        });
       } else {
-        setMessage("Failed to create list.");
+        notify("Failed to create list.", { type: "error" });
       }
     } catch {
-      setMessage("Network error creating list.");
+      notify("Network error creating list.", { type: "error" });
     }
   };
 
   const handleDeleteList = async (listId: string) => {
     if (!user?.id) return;
-    setMessage("");
     try {
       const response = await fetch(`/api/lists/${listId}?userId=${user.id}`, {
         method: "DELETE",
@@ -108,18 +108,17 @@ const ListsPage = () => {
 
       if (response.ok) {
         setLists((prev) => prev.filter((list) => list.id !== listId));
-        setMessage("List deleted successfully!");
+        notify("List deleted successfully!", { type: "success" });
       } else {
-        setMessage("Failed to delete list.");
+        notify("Failed to delete list.", { type: "error" });
       }
     } catch {
-      setMessage("Network error deleting list.");
+      notify("Network error deleting list.", { type: "error" });
     }
   };
 
   const handleRemoveMovieFromList = async (listId: string, movieId: string) => {
     if (!user?.id) return;
-    setMessage("");
     try {
       const response = await fetch(
         `/api/lists/${listId}/movies?userId=${user.id}&movieId=${movieId}`,
@@ -139,12 +138,12 @@ const ListsPage = () => {
               : list,
           ),
         );
-        setMessage("Movie removed from list.");
+        notify("Movie removed from list.", { type: "info" });
       } else {
-        setMessage("Failed to remove movie from list.");
+        notify("Failed to remove movie from list.", { type: "error" });
       }
     } catch {
-      setMessage("Network error removing movie.");
+      notify("Network error removing movie.", { type: "error" });
     }
   };
 
@@ -155,7 +154,6 @@ const ListsPage = () => {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-3xl">My Lists</h1>
-      {message && <p className="text-center text-sm text-red-500">{message}</p>}
 
       <div className="flex max-w-lg items-center space-x-2">
         <Input
