@@ -1,3 +1,22 @@
+# Trabalho Prático - Engenharia de Software II
+
+### Integrantes
+
+Daniel Augusto Lopes
+
+Pedro Henrique Madeira de Oliveira Pereira
+
+### SceneIt
+
+O sistema em questão é uma aplicação para visualizar filmes e criar listas personalizadas deles.
+
+### Tecnologias Utilizadas
+
+![Static Badge](https://img.shields.io/badge/NextJS-TypeScript-blue)&nbsp;&nbsp;&nbsp;&nbsp;![Static Badge](https://img.shields.io/badge/Tailwind-lightblue)&nbsp;&nbsp;&nbsp;&nbsp;![Static Badge](https://img.shields.io/badge/shadcn-gray)&nbsp;&nbsp;&nbsp;&nbsp;![Static Badge](https://img.shields.io/badge/Jest-orange)&nbsp;&nbsp;&nbsp;&nbsp;![Static Badge](https://img.shields.io/badge/Cypress-green)
+
+<details>
+<summary>Original Nextjs project readme</summary>
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -34,3 +53,5 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+</details>
