@@ -162,7 +162,7 @@ const AddToListDialog = ({
               className="flex-1"
             />
             <Button onClick={handleCreateList}>
-              <PlusIcon className="mr-2 h-4 w-4" /> Create
+              <PlusIcon className="h-4 w-4" /> Create
             </Button>
           </div>
 
