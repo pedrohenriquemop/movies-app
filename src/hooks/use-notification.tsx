@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { useCallback } from "react";
 
 type NotificationType = "default" | "success" | "error" | "info" | "warning";
 
@@ -9,7 +10,7 @@ interface NotificationOptions {
 }
 
 export function useNotification() {
-  const notify = (title: string, options?: NotificationOptions) => {
+  const notify = useCallback((title: string, options?: NotificationOptions) => {
     const { type = "default", description, duration = 3000 } = options || {};
 
     switch (type) {
@@ -28,7 +29,7 @@ export function useNotification() {
       default:
         toast(title, { description, duration });
     }
-  };
+  }, []);
 
   return { notify };
 }
