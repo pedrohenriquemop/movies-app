@@ -12,6 +12,13 @@ O sistema em questão é uma aplicação para visualizar filmes e criar listas p
 
 ### Tecnologias Utilizadas
 
+- TypeScript
+- NextJs
+- TailwindCSS
+- Shadcn
+- Jest
+- Cypress
+
 ![Static Badge](https://img.shields.io/badge/NextJS-TypeScript-blue)&nbsp;&nbsp;&nbsp;&nbsp;![Static Badge](https://img.shields.io/badge/Tailwind-lightblue)&nbsp;&nbsp;&nbsp;&nbsp;![Static Badge](https://img.shields.io/badge/shadcn-gray)&nbsp;&nbsp;&nbsp;&nbsp;![Static Badge](https://img.shields.io/badge/Jest-orange)&nbsp;&nbsp;&nbsp;&nbsp;![Static Badge](https://img.shields.io/badge/Cypress-green)
 
 <details>
