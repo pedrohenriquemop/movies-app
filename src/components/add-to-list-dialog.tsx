@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -11,15 +9,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { MovieList } from "@/lib/mock-data";
-import { PlusIcon, ChevronDownIcon } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import { useNotification } from "@/hooks/use-notification";
+import { MovieList } from "@/lib/mock-data";
+import { cn } from "@/lib/utils";
+import { PopoverContent } from "@radix-ui/react-popover";
+import { CheckIcon, ChevronsUpDownIcon, PlusIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "./ui/command";
+import { Popover, PopoverTrigger } from "./ui/popover";
 
 interface AddToListDialogProps {
   isOpen: boolean;
@@ -37,6 +42,9 @@ const AddToListDialog = ({
   const { notify } = useNotification();
   const [userLists, setUserLists] = useState<MovieList[]>([]);
   const [newListName, setNewListName] = useState("");
+
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [selectedList, setSelectedList] = useState<MovieList | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -94,7 +102,21 @@ const AddToListDialog = ({
     }
   };
 
-  const handleAddMovieToList = async (listId: string, listName: string) => {
+  const handleSelectList = (listId: MovieList["id"]) => {
+    const selectedList = userLists.find((list) => list.id === listId);
+
+    if (!selectedList) {
+      notify("Selected list not found.", { type: "error" });
+      return;
+    }
+
+    setSelectedList(selectedList);
+    setIsSelectOpen(false);
+  };
+
+  const handleAddMovieToList = async () => {
+    const { userId, id: listId, name: listName } = selectedList || {};
+
     if (!userId) return;
     try {
       const response = await fetch(`/api/lists/${listId}/movies`, {
@@ -144,7 +166,7 @@ const AddToListDialog = ({
             </Button>
           </div>
 
-          <div className="border-t pt-4">
+          <div className="flex-1 border-t pt-4">
             <h3 className="text-md mb-2 font-semibold">Your Lists</h3>
             {isLoading ? (
               <p>Loading lists...</p>
@@ -153,23 +175,46 @@ const AddToListDialog = ({
                 No lists found. Create one above!
               </p>
             ) : (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between">
-                    Select a List <ChevronDownIcon className="ml-2 h-4 w-4" />
+              <Popover open={isSelectOpen} onOpenChange={setIsSelectOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={isSelectOpen}
+                    className="w-full justify-between"
+                  >
+                    {selectedList?.name || "Select list..."}
+                    <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)]">
-                  {userLists.map((list) => (
-                    <DropdownMenuItem
-                      key={list.id}
-                      onClick={() => handleAddMovieToList(list.id, list.name)}
-                    >
-                      {list.name}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </PopoverTrigger>
+                <PopoverContent className="w-[300] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search for list..." />
+                    <CommandList>
+                      <CommandEmpty>No list found.</CommandEmpty>
+                      <CommandGroup>
+                        {userLists.map((list) => (
+                          <CommandItem
+                            key={list.id}
+                            value={list.id}
+                            onSelect={handleSelectList}
+                          >
+                            <CheckIcon
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                selectedList?.id === list.id
+                                  ? "opacity-100"
+                                  : "opacity-0",
+                              )}
+                            />
+                            {list.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             )}
           </div>
         </div>
@@ -177,6 +222,7 @@ const AddToListDialog = ({
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>
+          <Button onClick={handleAddMovieToList}>Add</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
