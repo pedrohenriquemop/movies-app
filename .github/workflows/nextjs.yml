@@ -26,6 +26,10 @@ jobs:
         with:
           node-version: "20"
           cache: "pnpm" # Directly use pnpm for caching
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2 # Added this step to set up pnpm
+        with:
+          version: 8 # Specify a pnpm version, or omit for latest stable
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
