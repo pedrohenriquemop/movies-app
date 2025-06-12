@@ -1,14 +1,3 @@
-import { ExternalLink } from "lucide-react";
-import { Badge } from "./ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import Link from "next/link";
 import MovieCard from "./MovieCard/movie-card";
 
 export type MovieMetadata = {
