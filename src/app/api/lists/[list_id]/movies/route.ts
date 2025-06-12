@@ -5,6 +5,12 @@ import {
   removeMovieFromList,
 } from "@/lib/mock-data";
 
+export function generateStaticParams() {
+  return Array.from({ length: 1000 }, (_, index) => index).map((index) => ({
+    list_id: index.toString(),
+  }));
+}
+
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ list_id: string }> },
