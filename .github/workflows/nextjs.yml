@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "23"
-          
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v2 # Added this step to set up pnpm
         with:
@@ -44,6 +44,8 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
       - name: Install dependencies
         run: pnpm install # Use pnpm install directly
+      - name: Remove API directory for static export
+        run: rm -rf app/api
       - name: Build with Next.js
         run: pnpm next build # Use pnpm next build directly
       - name: Upload artifact
