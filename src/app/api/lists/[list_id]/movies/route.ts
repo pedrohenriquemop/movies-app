@@ -7,7 +7,7 @@ import {
 
 export async function POST(
   req: NextRequest,
-  context: { params: { list_id: string } },
+  { params }: { params: Promise<{ list_id: string }> },
 ) {
   const { movieId, userId } = await req.json();
 
@@ -24,7 +24,7 @@ export async function POST(
     );
   }
 
-  const { list_id } = context?.params || {};
+  const { list_id } = await params;
   const list = getListById(list_id);
 
   if (!list || list.userId !== userId) {
@@ -41,7 +41,7 @@ export async function POST(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { list_id: string } },
+  { params }: { params: Promise<{ list_id: string }> },
 ) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
@@ -60,7 +60,7 @@ export async function DELETE(
     );
   }
 
-  const { list_id } = params;
+  const { list_id } = await params;
   const list = getListById(list_id);
 
   if (!list || list.userId !== userId) {

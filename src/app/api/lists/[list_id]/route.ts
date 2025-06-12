@@ -3,7 +3,7 @@ import { getListById, deleteList } from "@/lib/mock-data";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { list_id: string } },
+  { params }: { params: Promise<{ list_id: string }> },
 ) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
@@ -15,7 +15,7 @@ export async function GET(
     );
   }
 
-  const { list_id } = params;
+  const { list_id } = await params;
   const list = getListById(list_id);
 
   if (!list || list.userId !== userId) {
@@ -30,7 +30,7 @@ export async function GET(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { list_id: string } },
+  { params }: { params: Promise<{ list_id: string }> },
 ) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
@@ -42,7 +42,7 @@ export async function DELETE(
     );
   }
 
-  const { list_id } = params;
+  const { list_id } = await params;
   const list = getListById(list_id);
 
   if (!list || list.userId !== userId) {
