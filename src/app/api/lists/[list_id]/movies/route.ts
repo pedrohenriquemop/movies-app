@@ -7,7 +7,7 @@ import {
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { list_id: string } },
+  context: { params: { list_id: string } },
 ) {
   const { movieId, userId } = await req.json();
 
@@ -24,7 +24,7 @@ export async function POST(
     );
   }
 
-  const { list_id } = params;
+  const { list_id } = context?.params || {};
   const list = getListById(list_id);
 
   if (!list || list.userId !== userId) {
