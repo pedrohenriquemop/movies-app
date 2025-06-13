@@ -6,6 +6,8 @@ Daniel Augusto Lopes
 
 Pedro Henrique Madeira de Oliveira Pereira
 
+Pedro Henrique Silva Gonçalves de Souza
+
 ### SceneIt
 
 O sistema em questão é uma aplicação para visualizar filmes e criar listas personalizadas deles.
