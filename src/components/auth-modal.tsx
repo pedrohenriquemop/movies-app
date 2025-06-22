@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -23,14 +23,26 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   const { login, register } = useAuth();
   const { notify } = useNotification();
   const [authUsername, setAuthUsername] = useState("");
+  const [authEmail, setAuthEmail] = useState("");
   const [authPassword, setAuthPassword] = useState("");
+  const [mode, setMode] = useState<"register" | "login">("login");
 
   const handleLogin = async () => {
-    const result = await login(authUsername, authPassword);
+    if (mode === "register") {
+      setMode("login");
+      return;
+    }
+
+    if (!authEmail || !authPassword) {
+      notify("Please enter both email and password", { type: "error" });
+      return;
+    }
+
+    const result = await login(authEmail, authPassword);
     if (result.success) {
       notify("Login successful!", { type: "success" });
       onClose();
-      setAuthUsername("");
+      setAuthEmail("");
       setAuthPassword("");
     } else {
       notify(result.message || "Login failed", { type: "error" });
@@ -38,18 +50,30 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   };
 
   const handleRegister = async () => {
-    const result = await register(authUsername, authPassword);
+    if (mode === "login") {
+      setMode("register");
+      return;
+    }
+
+    const result = await register(authUsername, authEmail, authPassword);
     if (result.success) {
       notify("Registration successful! You are now logged in.", {
         type: "success",
       });
       onClose();
       setAuthUsername("");
+      setAuthEmail("");
       setAuthPassword("");
     } else {
       notify(result.message || "Registration failed", { type: "error" });
     }
   };
+
+  useEffect(() => {
+    if (mode === "login") {
+      setAuthUsername("");
+    }
+  }, [mode]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -57,23 +81,41 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         <DialogHeader>
           <DialogTitle>Authentication</DialogTitle>
           <DialogDescription>
-            Login or register to access all features.
+            {mode === "login"
+              ? "Please log in to continue"
+              : "Create a new account"}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
+          {mode === "register" && (
+            <div className="grid grid-cols-4 items-center gap-4">
+              <label htmlFor="auth-username" className="text-right">
+                Username
+              </label>
+              <Input
+                id="auth-username"
+                type="text"
+                value={authUsername}
+                onChange={(e) => setAuthUsername(e.target.value)}
+                placeholder="Enter username"
+                className="col-span-3"
+              />
+            </div>
+          )}
           <div className="grid grid-cols-4 items-center gap-4">
-            <label htmlFor="auth-username" className="text-right">
-              Username
+            <label htmlFor="auth-email" className="text-right">
+              Email
             </label>
             <Input
-              id="auth-username"
+              id="auth-email"
               type="text"
-              value={authUsername}
-              onChange={(e) => setAuthUsername(e.target.value)}
-              placeholder="Enter username"
+              value={authEmail}
+              onChange={(e) => setAuthEmail(e.target.value)}
+              placeholder="Enter email"
               className="col-span-3"
             />
           </div>
+
           <div className="grid grid-cols-4 items-center gap-4">
             <label htmlFor="auth-password" className="text-right">
               Password
@@ -92,8 +134,18 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={handleRegister}>Register</Button>
-          <Button onClick={handleLogin}>Login</Button>
+          <Button
+            onClick={handleRegister}
+            variant={mode !== "register" ? "secondary" : "default"}
+          >
+            Register
+          </Button>
+          <Button
+            onClick={handleLogin}
+            variant={mode !== "login" ? "secondary" : "default"}
+          >
+            Login
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

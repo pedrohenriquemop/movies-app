@@ -13,7 +13,8 @@ interface Props {
 
 const MovieDetail = ({ movie, fallbackId }: Props) => {
   const { setBreadcrumb } = useBreadcrumb();
-  const { isLoggedIn, user } = useAuth();
+  // TODO: implement ratings, that will only be available for logged-in users
+  // const { isLoggedIn, user } = useAuth();
 
   useEffect(() => {
     if (!movie) {
