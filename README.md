@@ -8,9 +8,13 @@ Pedro Henrique Madeira de Oliveira Pereira
 
 Pedro Henrique Silva Gonçalves de Souza
 
-### SceneIt
+### Explicação do sistema - SceneIt
 
-O sistema em questão é uma aplicação para visualizar filmes e criar listas personalizadas deles.
+Este sistema é uma aplicação web que permite aos usuários buscar, avaliar e comentar sobre filmes. O projeto tem como objetivo simular uma plataforma semelhante ao Letterboxd, permitindo que usuários:
+
+Realizem buscas por filmes com base em títulos, utilizando a API do The Movie Database (TMDb);
+Cadastrem-se no sistema;
+Criem avaliações, incluindo nota e comentários para filmes específicos;
 
 ### Tecnologias Utilizadas
 
