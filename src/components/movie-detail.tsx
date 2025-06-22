@@ -1,12 +1,10 @@
 "use client";
 
+import { useAuth } from "@/components/contexts/auth-context";
 import { useBreadcrumb } from "@/hooks/use-breadcrumb";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MovieMetadata } from "./movies-grid";
 import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
-import { useAuth } from "@/components/contexts/auth-context";
-import AddToListDialog from "./add-to-list-dialog";
 
 interface Props {
   movie: MovieMetadata | null;
@@ -16,7 +14,6 @@ interface Props {
 const MovieDetail = ({ movie, fallbackId }: Props) => {
   const { setBreadcrumb } = useBreadcrumb();
   const { isLoggedIn, user } = useAuth();
-  const [showAddToListDialog, setShowAddToListDialog] = useState(false);
 
   useEffect(() => {
     if (!movie) {
@@ -55,24 +52,6 @@ const MovieDetail = ({ movie, fallbackId }: Props) => {
         )}
       </div>
       <p className="text-xl">Rating: {movie.vote_average} / 10</p>
-
-      {isLoggedIn && user && (
-        <Button
-          onClick={() => setShowAddToListDialog(true)}
-          className="mt-4 w-fit"
-        >
-          Add to List
-        </Button>
-      )}
-
-      {movie && isLoggedIn && user && (
-        <AddToListDialog
-          isOpen={showAddToListDialog}
-          onClose={() => setShowAddToListDialog(false)}
-          movieId={movie.id}
-          userId={user.id}
-        />
-      )}
     </div>
   );
 };

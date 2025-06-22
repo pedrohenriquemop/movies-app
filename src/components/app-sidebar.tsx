@@ -62,12 +62,6 @@ const routes: {
     icon: Film,
   },
   {
-    name: "Lists",
-    href: "/lists",
-    icon: List,
-    authRequired: true,
-  },
-  {
     name: "Profile",
     href: "/profile",
     icon: User,
