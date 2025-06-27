@@ -3,6 +3,7 @@
 import MoviesGrid from "@/components/movies-grid";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { moviesApi } from "@/utils/api";
 import { Movie } from "@/utils/api_types";
 import { Search } from "lucide-react";
@@ -58,7 +59,7 @@ export default function Movies() {
       return;
     }
 
-    fetchMovies(searchTerm, 1);
+    fetchMovies(searchTerm.trim(), 1);
   };
 
   const renderContent = () => {
@@ -80,7 +81,9 @@ export default function Movies() {
 
     return (
       <>
-        <MoviesGrid movies={movies} />
+        <ScrollArea className="h-full max-h-[75vh] w-full overflow-hidden">
+          <MoviesGrid movies={movies} />
+        </ScrollArea>
         <div className="mt-8 flex items-center justify-center gap-4">
           <button
             onClick={handlePreviousPage}
@@ -105,7 +108,7 @@ export default function Movies() {
   };
 
   return (
-    <div>
+    <>
       <h1 className="text-3xl">Movies</h1>
       <div className="mt-2 flex w-full items-center justify-between gap-2">
         <Input
@@ -113,7 +116,7 @@ export default function Movies() {
           value={searchTerm}
           onInput={(e) => {
             const value = (e.target as HTMLInputElement).value;
-            setSearchTerm(value.trim());
+            setSearchTerm(value);
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -131,6 +134,6 @@ export default function Movies() {
         </Button>
       </div>
       {renderContent()}
-    </div>
+    </>
   );
 }

@@ -21,7 +21,7 @@ const MovieCard = ({ movie }: MovieCardProps) => {
   const [imageError, setImageError] = useState(false);
 
   return (
-    <Card key={movie.id} className="flex w-auto max-w-[300] flex-col">
+    <Card key={movie.id} className="flex w-auto max-w-[600] flex-col">
       {" "}
       <CardHeader>
         {" "}
