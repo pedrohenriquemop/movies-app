@@ -1,26 +1,79 @@
-import MovieDetail from "@/components/movie-detail";
-import { MovieMetadata } from "@/components/movies-grid";
-import data from "../../../../../public/data/movies.json" with { type: "json" };
+"use client";
 
-const Movie = async ({
+import { useEffect, useState } from "react";
+import MovieDetail from "@/components/movie-detail";
+import { moviesApi } from "@/utils/api";
+import { Movie } from "@/utils/api_types";
+const MoviePage = ({
   params,
 }: {
-  params: Promise<{
+  params: {
     movie_id: string;
-  }>;
+  };
 }) => {
-  const { movie_id } = await params;
+  const { movie_id } = params;
+  const numericMovieId = parseInt(movie_id);
 
-  const fetchedMovie = (data as MovieMetadata[]).find(
-    (movie) => movie.id === movie_id,
-  );
+  const [movie, setMovie] = useState<Movie | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  return (
-    <MovieDetail
-      movie={fetchedMovie || null}
-      {...(!fetchedMovie ? { fallbackId: movie_id } : {})}
-    />
-  );
+  useEffect(() => {
+    const fetchMovie = async () => {
+      if (isNaN(numericMovieId)) {
+        setError("Invalid movie ID format.");
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+      try {
+        // There's no endpoint to get a movie by id (not yet at least), so we fetch all movies and find the one with the matching id
+        const response = await moviesApi.getMovies(undefined, 1, 1000);
+        const foundMovie = response.movies.find((m) => m.id === numericMovieId);
+
+        if (foundMovie) {
+          setMovie(foundMovie);
+        } else {
+          setError("Movie not found.");
+        }
+      } catch (err: any) {
+        console.error("Failed to fetch movie:", err);
+        setError(err.message || "Failed to load movie details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovie();
+  }, [movie_id, numericMovieId]);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p>Loading movie details...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p className="text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
+
+  if (!movie) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p>Movie not found.</p>
+      </div>
+    );
+  }
+
+  return <MovieDetail movie={movie} />;
 };
 
-export default Movie;
+export default MoviePage;

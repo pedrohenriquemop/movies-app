@@ -1,23 +1,8 @@
+import { Movie } from "@/utils/api_types";
 import MovieCard from "./MovieCard/movie-card";
 
-export type MovieMetadata = {
-  title: string;
-  adult: string;
-  belongs_to_collection: string | null;
-  budget: string;
-  genres: string;
-  homepage: string | null;
-  id: string;
-  imdb_id: string;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  vote_count: number;
-  vote_average: number;
-};
-
 interface Props {
-  movies: MovieMetadata[];
+  movies: Movie[];
 }
 
 const MoviesGrid = ({ movies }: Props) => {

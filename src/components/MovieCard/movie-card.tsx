@@ -1,6 +1,9 @@
-import { ExternalLink } from "lucide-react";
+import { Movie } from "@/utils/api_types";
+import { ImageOff } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "../ui/badge";
+import { useState } from "react";
+import { Button } from "../ui/button";
 import {
   Card,
   CardContent,
@@ -9,44 +12,77 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { MovieMetadata } from "../movies-grid";
 
 interface MovieCardProps {
-  movie: MovieMetadata;
+  movie: Movie;
 }
 
 const MovieCard = ({ movie }: MovieCardProps) => {
+  const [imageError, setImageError] = useState(false);
+
   return (
-    <Card key={movie.id} className="w-auto">
+    <Card key={movie.id} className="flex w-auto flex-col">
+      {" "}
       <CardHeader>
-        <CardTitle>
-          <Link className="hover:underline" href={`/movies/${movie.id}`}>
+        {" "}
+        <CardTitle className="text-xl">
+          {" "}
+          <Link
+            className="text-2xl hover:underline"
+            href={`/movies/${movie.id}`}
+          >
             {movie.title}
           </Link>
+          {movie.releaseYear && (
+            <span
+              className="text-secondary block"
+              data-testid="movie-card-release-year"
+            >
+              {movie.releaseYear}
+            </span>
+          )}
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <CardDescription className="line-clamp-3">
-          {movie.overview}
-        </CardDescription>
-        {(JSON.parse(movie?.genres.replaceAll("'", '"')) || []).map(
-          (genre: { id: string; name: string }) => (
-            <Badge key={genre.id} variant="outline" className="mt-1 mr-1">
-              {genre.name}
-            </Badge>
-          ),
+      <CardContent className="flex flex-grow flex-col items-center gap-4">
+        {" "}
+        {movie?.posterUrl && !imageError ? (
+          <div
+            className="relative w-full overflow-hidden rounded-md"
+            style={{ aspectRatio: "2/3" }}
+          >
+            <Image
+              src={`${movie.posterUrl}`}
+              alt={movie.title || "Movie Poster"}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              style={{ objectFit: "cover" }}
+              onError={() => setImageError(true)}
+              priority
+            />
+          </div>
+        ) : (
+          <div
+            className="relative flex w-full flex-col items-center justify-center gap-2 rounded-md bg-gray-200 text-gray-500"
+            style={{ aspectRatio: "2/3" }}
+          >
+            <ImageOff size={48} className="text-gray-400" />
+            <span className="text-center text-sm font-medium">
+              No Poster Available
+            </span>{" "}
+          </div>
         )}
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Badge>{movie.vote_average} / 10</Badge>
-        <Link
-          href={`https://www.imdb.com/title/${movie.imdb_id}`}
-          target="blank"
-          className="hover:underline"
+        <CardDescription
+          className="mb-4 line-clamp-3 text-sm"
+          data-slot="card-description"
         >
-          <ExternalLink className="mr-0.5 inline align-baseline" size={14} />
-          <span>View on IMDb</span>
-        </Link>
+          {" "}
+          {movie.description}
+        </CardDescription>
+      </CardContent>
+      <CardFooter className="pv-0 flex items-center justify-between">
+        <Button>
+          <Link href={`/movies/${movie.id}`}>View Details and Ratings</Link>
+        </Button>
       </CardFooter>
     </Card>
   );

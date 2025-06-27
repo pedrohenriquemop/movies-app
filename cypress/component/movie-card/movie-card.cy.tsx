@@ -15,30 +15,14 @@ describe("MovieCard", () => {
 
   it("renders the movie overview", () => {
     cy.get('[data-slot="card-description"]')
-      .contains(mockMovie.overview)
+      .contains(mockMovie.description as string)
       .should("exist");
   });
 
-  it("renders the genres as badges", () => {
-    const genres = JSON.parse(mockMovie.genres.replaceAll("'", '"'));
-    genres.forEach((genre: { name: string }) => {
-      cy.get('[data-slot="badge"]').contains(genre.name).should("exist");
-    });
-  });
-
-  it("renders the vote average badge", () => {
-    cy.get('[data-slot="badge"]')
-      .contains(`${mockMovie.vote_average} / 10`)
+  it("renders the movie release year", () => {
+    cy.get("[data-testid='movie-card-release-year']")
+      .contains(mockMovie.releaseYear)
       .should("exist");
-  });
-
-  it("renders the IMDb link with correct href and text", () => {
-    cy.contains("a", "View on IMDb").should(
-      "have.attr",
-      "href",
-      `https://www.imdb.com/title/${mockMovie.imdb_id}`,
-    );
-    cy.contains("a", "View on IMDb").find("svg").should("exist");
   });
 
   it("applies line-clamp-3 to the overview", () => {
