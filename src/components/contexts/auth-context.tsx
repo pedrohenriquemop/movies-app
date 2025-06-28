@@ -24,6 +24,7 @@ export type AuthUser = {
 type AuthContextType = {
   isLoggedIn: boolean;
   user: AuthUser | null;
+  updateUser: (updatedUser: Partial<AuthUser>) => void;
   login: (
     email: string,
     password: string,
@@ -145,15 +146,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
   }, []);
 
+  const updateUser = useCallback((updatedUser: Partial<AuthUser>) => {
+    setUser((prevUser) => {
+      if (!prevUser) return null;
+      return { ...prevUser, ...updatedUser };
+    });
+  }, []);
+
   const contextValue = React.useMemo(
     () => ({
       isLoggedIn,
       user,
+      updateUser,
       login,
       register,
       logout,
     }),
-    [isLoggedIn, user, login, register, logout],
+    [isLoggedIn, user, updateUser, login, register, logout],
   );
 
   return (

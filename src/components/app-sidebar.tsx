@@ -1,25 +1,24 @@
 "use client";
 
+import { useAuth } from "@/components/contexts/auth-context";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import {
-  BadgeCheck,
   ChevronsUpDown,
   Clapperboard,
-  Coffee,
-  Cog,
   Film,
   Home,
-  List,
   LogOut,
-  Logs,
   LucideIcon,
   User,
+  User2Icon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
+import AuthModal from "./auth-modal";
 import {
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -41,9 +40,6 @@ import {
   useSidebar,
 } from "./ui/sidebar";
 import UserCard from "./user-card";
-import { useAuth } from "@/components/contexts/auth-context";
-import { useState } from "react";
-import AuthModal from "./auth-modal";
 
 const routes: {
   name: string;
@@ -75,15 +71,6 @@ const AppSidebar = () => {
   const { isLoggedIn, user, logout } = useAuth();
 
   const [showAuthModal, setShowAuthModal] = useState(false);
-
-  const currentUser = user
-    ? {
-        name: user.username,
-        email: `${user.username}@example.com`,
-        avatar:
-          "https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/6e61b/MainBefore.avif",
-      }
-    : null;
 
   return (
     <>
@@ -151,14 +138,14 @@ const AppSidebar = () => {
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
-              {isLoggedIn && currentUser ? (
+              {isLoggedIn && user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <SidebarMenuButton
                       size="lg"
                       className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                     >
-                      <UserCard user={currentUser} />
+                      <UserCard user={user} />
                       <ChevronsUpDown className="ml-auto size-4" />
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
@@ -169,29 +156,14 @@ const AppSidebar = () => {
                   >
                     <DropdownMenuLabel className="p-0 font-normal">
                       <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                        <UserCard user={currentUser} />
+                        <UserCard user={user} />
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
                       <DropdownMenuItem>
-                        <Coffee />
-                        Buy us a coffee
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>
-                        <BadgeCheck />
-                        Account
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Cog />
-                        Settings
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Logs />
-                        Logs
+                        <User2Icon />
+                        <Link href="/profile">Profile</Link>
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />

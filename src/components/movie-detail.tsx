@@ -190,7 +190,7 @@ const MovieDetail = ({ movie, fallbackId }: Props) => {
             src={posterPath}
             alt={movie.title || "Movie Poster"}
             fill
-            sizes="(max-width: 400px) 100vw, (max-width: 625px) 50vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             style={{ objectFit: "cover" }}
             onError={handleImageError}
             priority
