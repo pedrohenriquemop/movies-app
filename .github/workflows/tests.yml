@@ -51,6 +51,9 @@ jobs:
           runTests: false
           build: pnpm build
 
+      - name: Do a ls
+        run: ls -la
+
       - name: Save build folder
         uses: actions/upload-artifact@v4
         with:
