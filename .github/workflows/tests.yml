@@ -72,7 +72,7 @@ jobs:
           name: pnpm-store
           path: ~/.local/share/pnpm/store
 
-      - name: Install dependencies (skip if already installed)
+      - name: Install dependencies
         run: pnpm install
 
       - name: Run unit tests
@@ -105,7 +105,7 @@ jobs:
           name: pnpm-store
           path: ~/.local/share/pnpm/store
 
-      - name: Install dependencies (skip if already installed)
+      - name: Install dependencies
         run: pnpm install
 
       - name: Install Cypress binary
@@ -115,24 +115,31 @@ jobs:
         run: pnpm test-component:headless
 
   e2e-tests:
+    needs: setup
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 23
 
-      - name: Install pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 10
+
+      - name: Download pnpm store
+        uses: actions/download-artifact@v4
+        with:
+          name: pnpm-store
+          path: ~/.local/share/pnpm/store
 
       - name: Install dependencies
         run: pnpm install
@@ -140,8 +147,12 @@ jobs:
       - name: Build Next.js app
         run: pnpm build
 
-      - name: Install Cypress binary (macOS only)
+      - name: Install Cypress binary (macOS)
         if: runner.os == 'macOS'
+        run: pnpm exec cypress install
+
+      - name: Install Cypress binary (Windows)
+        if: runner.os == 'Windows'
         run: pnpm exec cypress install
 
       - name: Run E2E tests (macOS)
@@ -151,8 +162,16 @@ jobs:
           npx wait-on http://localhost:3000
           pnpm test-e2e:headless
 
-      - name: Run Cypress tests (non-macOS)
-        if: runner.os != 'macOS'
+      - name: Run E2E tests (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Start-Process -FilePath "pnpm" -ArgumentList "start" -NoNewWindow
+          npx wait-on http://localhost:3000
+          pnpm test-e2e:headless
+
+      - name: Run Cypress tests (Linux)
+        if: runner.os == 'Linux'
         uses: cypress-io/github-action@v6
         with:
           start: pnpm start
