@@ -113,3 +113,39 @@ jobs:
 
       - name: Run component tests
         run: pnpm test-component:headless
+
+  e2e-tests:
+    needs: setup
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 23
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Download pnpm store
+        uses: actions/download-artifact@v4
+        with:
+          name: pnpm-store
+          path: ~/.local/share/pnpm/store
+
+      - name: Install dependencies (skip if already installed)
+        run: pnpm install
+
+      - name: Install Cypress binary
+        run: pnpm exec cypress install
+
+      - name: Run e2e tests
+        run: pnpm test-e2e:headless
