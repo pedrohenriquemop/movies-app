@@ -153,7 +153,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Build Next.js app
+        run: pnpm build
+
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
+          start: pnpm start
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 60
           command: pnpm test-e2e:headless
