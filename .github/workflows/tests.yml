@@ -141,4 +141,3 @@ jobs:
           wait-on: "http://localhost:3000"
           command: pnpm test-e2e:headless
           browser: chrome
-          install-browser: true
