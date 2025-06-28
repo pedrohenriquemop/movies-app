@@ -147,5 +147,15 @@ jobs:
       - name: Install Cypress binary
         run: pnpm exec cypress install
 
+      - name: Start Frontend
+        run: pnpm dev &
+
+      - name: Install wait-on (if not a project dependency)
+        run: pnpm install -g wait-on
+
+      - name: Wait for Frontend to be Ready
+        run: |
+          wait-on http://localhost:3000]
+
       - name: Run e2e tests
         run: pnpm test-e2e:headless
