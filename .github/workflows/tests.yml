@@ -141,6 +141,12 @@ jobs:
           name: pnpm-store
           path: ~/.local/share/pnpm/store
 
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Cypress binary
+        run: pnpm exec cypress install
+
       - name: E2E Test with Cypress
         uses: cypress-io/github-action@v6
         with:
