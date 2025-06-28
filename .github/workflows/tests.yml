@@ -147,6 +147,11 @@ jobs:
       #     name: build
       #     path: build
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
