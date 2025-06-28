@@ -160,4 +160,4 @@ jobs:
         run: wait-on http://localhost:3000
 
       - name: Run e2e tests
-        run: pnpm test-e2e:headless
+        run: pnpm test-e2e:headless --browser firefox
