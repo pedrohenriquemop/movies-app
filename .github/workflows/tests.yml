@@ -51,12 +51,12 @@ jobs:
           runTests: false
           build: pnpm build
 
-      - name: Save build folder
-        uses: actions/upload-artifact@v4
-        with:
-          name: build
-          if-no-files-found: error
-          path: build
+      # - name: Save build folder
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: build
+      #     if-no-files-found: error
+      #     path: build
 
   unit-tests:
     needs: setup
@@ -141,14 +141,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download the build folder
-        uses: actions/download-artifact@v4
-        with:
-          name: build
-          path: build
+      # - name: Download the build folder
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: build
+      #     path: build
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          start: npm start
+          start: pnpm start
           browser: chrome
