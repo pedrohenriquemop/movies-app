@@ -161,9 +161,10 @@ const AppSidebar = () => {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                      <DropdownMenuItem>
-                        <User2Icon />
-                        <Link href="/profile">Profile</Link>
+                      <DropdownMenuItem asChild>
+                        <Link href="/profile">
+                          <User2Icon /> <span>Profile</span>
+                        </Link>
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
