@@ -63,11 +63,10 @@ jobs:
 
   unit-tests:
     needs: setup
-    runs-on: ubuntu-latest
-    # runs-on: ${{ matrix.os }}
-    # strategy:
-    #   matrix:
-    #     os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
       - name: Checkout repo
@@ -97,11 +96,10 @@ jobs:
 
   component-tests:
     needs: setup
-    runs-on: ubuntu-latest
-    # runs-on: ${{ matrix.os }}
-    # strategy:
-    #   matrix:
-    #     os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
       - name: Checkout repo
@@ -133,30 +131,30 @@ jobs:
         run: pnpm test-component:headless
 
   e2e-tests:
-    needs: setup
-    runs-on: ubuntu-latest
-    # runs-on: ${{ matrix.os }}
-    # strategy:
-    #   matrix:
-    #     os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download the build folder
-        uses: actions/download-artifact@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          name: next-build
-          path: .next
+          node-version: "20"
+          cache: "pnpm"
 
-      - name: Setup pnpm
+      - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 10
+          version: 8
 
-      - name: Cypress run
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
-          start: pnpm start
-          browser: chrome
+          command: pnpm test-e2e:headless
