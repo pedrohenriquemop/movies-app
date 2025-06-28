@@ -140,14 +140,8 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           install-command: pnpm install
-
           build: pnpm build
           start: pnpm start
           wait-on: "http://localhost:3000"
-
           command: pnpm test-e2e:headless
-
           browser: chrome
-          install-browser: true
-
-          video: false
