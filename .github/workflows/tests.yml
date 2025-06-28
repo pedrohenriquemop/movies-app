@@ -155,7 +155,7 @@ jobs:
 
       - name: Wait for Frontend to be Ready
         run: |
-          wait-on http://localhost:3000]
+          wait-on http://localhost:3000
 
       - name: Run e2e tests
         run: pnpm test-e2e:headless
