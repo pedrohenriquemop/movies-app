@@ -125,34 +125,20 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 23
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 10
 
-      - name: Download pnpm store
-        uses: actions/download-artifact@v4
-        with:
-          name: pnpm-store
-          path: ~/.local/share/pnpm/store
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Install Cypress binary
-        run: pnpm exec cypress install
-
       - name: E2E Test with Cypress
         uses: cypress-io/github-action@v6
         with:
+          working-directory: ./frontend
           install-command: pnpm install
+          cache-key: "pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}"
           build: pnpm build
           start: pnpm start
           wait-on: "http://localhost:3000"
           command: pnpm test-e2e:headless
           browser: chrome
+          install-browser: true
