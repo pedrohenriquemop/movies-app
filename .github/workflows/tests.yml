@@ -133,7 +133,6 @@ jobs:
       - name: E2E Test with Cypress
         uses: cypress-io/github-action@v6
         with:
-          working-directory: ./frontend
           install-command: pnpm install
           cache-key: "pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}"
           build: pnpm build
