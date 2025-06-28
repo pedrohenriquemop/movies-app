@@ -9,6 +9,7 @@
     "lint": "next lint",
     "cypress": "cypress open",
     "test-component:headless": "cypress run --component",
+    "test-e2e:headless": "cypress run --e2e",
     "test": "jest",
     "test:watch": "jest --watch"
   },

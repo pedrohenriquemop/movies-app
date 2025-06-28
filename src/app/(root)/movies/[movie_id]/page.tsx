@@ -7,19 +7,20 @@ import { Movie } from "@/utils/api_types";
 const MoviePage = ({
   params,
 }: {
-  params: {
+  params: Promise<{
     movie_id: string;
-  };
+  }>;
 }) => {
-  const { movie_id } = params;
-  const numericMovieId = parseInt(movie_id);
-
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMovie = async () => {
+      const resolvedParams = await params;
+      const { movie_id } = resolvedParams;
+      const numericMovieId = parseInt(movie_id);
+
       if (isNaN(numericMovieId)) {
         setError("Invalid movie ID format.");
         setLoading(false);
@@ -47,7 +48,7 @@ const MoviePage = ({
     };
 
     fetchMovie();
-  }, [movie_id, numericMovieId]);
+  }, [params]);
 
   if (loading) {
     return (

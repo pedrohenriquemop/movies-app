@@ -114,6 +114,7 @@ const AppSidebar = () => {
                 <SidebarMenuItem
                   key={index}
                   className={`${state === "collapsed" ? "px-2" : "px-1"} transition-[padding] duration-100`}
+                  data-testid={`${route.name.toLowerCase()}-sidebar-item`}
                 >
                   <SidebarMenuButton
                     asChild
@@ -178,6 +179,7 @@ const AppSidebar = () => {
                 <SidebarMenuButton
                   size="lg"
                   onClick={() => setShowAuthModal(true)}
+                  data-testid="login-register-button"
                 >
                   <div className="flex aspect-square items-center justify-center rounded-lg p-2">
                     <User className="size-4" />

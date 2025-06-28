@@ -108,7 +108,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             </label>
             <Input
               id="auth-email"
-              type="text"
+              type="email"
               value={authEmail}
               onChange={(e) => setAuthEmail(e.target.value)}
               placeholder="Enter email"
@@ -131,18 +131,24 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button
+            variant="outline"
+            onClick={onClose}
+            data-testid="auth-cancel-button"
+          >
             Cancel
           </Button>
           <Button
             onClick={handleRegister}
             variant={mode !== "register" ? "secondary" : "default"}
+            data-testid="auth-register-button"
           >
             Register
           </Button>
           <Button
             onClick={handleLogin}
             variant={mode !== "login" ? "secondary" : "default"}
+            data-testid="auth-login-button"
           >
             Login
           </Button>

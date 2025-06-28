@@ -23,11 +23,11 @@ export default function Movies() {
     setLoading(true);
     setError(null);
     try {
-      const response = await moviesApi.getMovies(searchTerm || "", page, limit);
+      const response = await moviesApi.getMovies(searchTerm || "", page);
 
       setMovies(response.movies);
       setTotalCount(response.totalCount);
-      setTotalPages(Math.ceil(response.totalCount / limit));
+      setTotalPages(Math.ceil(response.totalCount / (response?.limit || 20)));
       setCurrentPage(page);
     } catch (err: any) {
       console.error("Failed to fetch movies:", err);
