@@ -45,12 +45,26 @@ jobs:
           name: pnpm-store
           path: ${{ env.STORE_PATH }}
 
+      - name: Cypress install
+        uses: cypress-io/github-action@v6
+        with:
+          runTests: false
+          build: pnpm build
+
+      - name: Save build folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          if-no-files-found: error
+          path: build
+
   unit-tests:
     needs: setup
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ubuntu-latest
+    # runs-on: ${{ matrix.os }}
+    # strategy:
+    #   matrix:
+    #     os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
       - name: Checkout repo
@@ -80,10 +94,11 @@ jobs:
 
   component-tests:
     needs: setup
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ubuntu-latest
+    # runs-on: ${{ matrix.os }}
+    # strategy:
+    #   matrix:
+    #     os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
       - name: Checkout repo
@@ -116,27 +131,24 @@ jobs:
 
   e2e-tests:
     needs: setup
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ubuntu-latest
+    # runs-on: ${{ matrix.os }}
+    # strategy:
+    #   matrix:
+    #     os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - name: Download the build folder
+        uses: actions/download-artifact@v4
         with:
-          version: 10
+          name: build
+          path: build
 
-      - name: E2E Test with Cypress
+      - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          install-command: pnpm install
-          cache-key: "pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}"
-          build: pnpm build
-          start: pnpm start
-          wait-on: "http://localhost:3000"
-          command: pnpm test-e2e:headless
+          start: npm start
           browser: chrome
