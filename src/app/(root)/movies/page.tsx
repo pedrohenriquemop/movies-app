@@ -17,7 +17,6 @@ export default function Movies() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);
-  const limit = 20;
 
   const fetchMovies = async (searchTerm: string, page: number) => {
     setLoading(true);
@@ -29,9 +28,9 @@ export default function Movies() {
       setTotalCount(response.totalCount);
       setTotalPages(Math.ceil(response.totalCount / (response?.limit || 20)));
       setCurrentPage(page);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to fetch movies:", err);
-      setError(err.message || "Failed to load movies.");
+      setError((err as Error).message || "Failed to load movies.");
     } finally {
       setLoading(false);
     }

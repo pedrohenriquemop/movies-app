@@ -141,21 +141,23 @@ jobs:
           name: pnpm-store
           path: ~/.local/share/pnpm/store
 
-      - name: Install dependencies (skip if already installed)
+      - name: Install dependencies
         run: pnpm install
 
       - name: Install Cypress binary
         run: pnpm exec cypress install
 
-      - name: Start Frontend
-        run: pnpm dev &
+      - name: Build Frontend
+        run: pnpm build
 
-      - name: Install wait-on (if not a project dependency)
+      - name: Start Frontend
+        run: pnpm start &
+
+      - name: Install wait-on
         run: pnpm install -g wait-on
 
       - name: Wait for Frontend to be Ready
-        run: |
-          wait-on http://localhost:3000
+        run: wait-on http://localhost:3000
 
       - name: Run e2e tests
         run: pnpm test-e2e:headless

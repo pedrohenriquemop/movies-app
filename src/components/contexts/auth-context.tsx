@@ -101,13 +101,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             message: "Login failed",
           };
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Error during login:", error);
         setIsLoggedIn(false);
         setUser(null);
         return {
           success: false,
-          message: error.message || "Network error during login",
+          message: (error as Error).message || "Network error during login",
         };
       }
     },
@@ -128,12 +128,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             message: "Registration failed: Invalid response",
           };
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Error during registration:", error);
 
         return {
           success: false,
-          message: error.message || "Network error during registration",
+          message:
+            (error as Error).message || "Network error during registration",
         };
       }
     },

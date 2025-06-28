@@ -46,9 +46,11 @@ const MovieDetail = ({ movie, fallbackId }: Props) => {
         ratings.find((rating) => rating.userId === user?.id) || null;
       setMovieRatings(ratings);
       setOwnRating(ownRating);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching movie ratings:", error);
-      setRatingsError(error.message || "Failed to load movie ratings.");
+      setRatingsError(
+        (error as Error).message || "Failed to load movie ratings.",
+      );
     } finally {
       setRatingsLoading(false);
     }
@@ -161,11 +163,12 @@ const MovieDetail = ({ movie, fallbackId }: Props) => {
       if (movie.id) {
         await fetchMovieRatings(movie.id);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error submitting rating:", error);
       notify("Submission Failed", {
         description:
-          error.message || "There was an error submitting your rating.",
+          (error as Error).message ||
+          "There was an error submitting your rating.",
         type: "warning",
       });
     } finally {

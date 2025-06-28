@@ -12,6 +12,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 interface RequestOptions extends RequestInit {
   token?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: any;
 }
 

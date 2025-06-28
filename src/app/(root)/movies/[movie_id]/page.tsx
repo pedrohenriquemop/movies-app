@@ -39,9 +39,9 @@ const MoviePage = ({
         } else {
           setError("Movie not found.");
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Failed to fetch movie:", err);
-        setError(err.message || "Failed to load movie details.");
+        setError((err as Error).message || "Failed to load movie details.");
       } finally {
         setLoading(false);
       }

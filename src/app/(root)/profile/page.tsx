@@ -37,15 +37,6 @@ const ProfilePage = () => {
     }
   }, [user]);
 
-  const isValidUrl: (str: string) => boolean = (str) => {
-    try {
-      new URL(str);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
   const handleEditToggle = () => {
     setEditingMode(!editingMode);
 
@@ -95,11 +86,12 @@ const ProfilePage = () => {
       });
 
       setEditingMode(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error updating profile:", error);
       notify("Update Failed", {
         description:
-          error.message || "Failed to update profile. Please try again.",
+          (error as Error).message ||
+          "Failed to update profile. Please try again.",
         type: "error",
       });
     } finally {
