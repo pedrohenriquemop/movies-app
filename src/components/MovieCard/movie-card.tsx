@@ -25,7 +25,7 @@ const MovieCard = ({ movie }: MovieCardProps) => {
       {" "}
       <CardHeader>
         {" "}
-        <CardTitle className="text-xl">
+        <CardTitle className="min-h-[4.5em] text-xl">
           {" "}
           <Link
             className="text-2xl hover:underline"

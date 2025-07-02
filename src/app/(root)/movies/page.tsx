@@ -38,7 +38,7 @@ export default function Movies() {
 
   useEffect(() => {
     fetchMovies(searchTerm, currentPage);
-  }, [currentPage]);
+  }, [currentPage, searchTerm]);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {

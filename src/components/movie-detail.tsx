@@ -21,8 +21,6 @@ interface Props {
   fallbackId?: string;
 }
 
-const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
-
 const MovieDetail = ({ movie, fallbackId }: Props) => {
   const [imageError, setImageError] = useState(false);
   const { setBreadcrumb } = useBreadcrumb();
@@ -37,24 +35,25 @@ const MovieDetail = ({ movie, fallbackId }: Props) => {
   const [ratingsLoading, setRatingsLoading] = useState<boolean>(true);
   const [ratingsError, setRatingsError] = useState<string | null>(null);
 
-  const fetchMovieRatings = useCallback(async (movieId: number) => {
-    setRatingsLoading(true);
-    setRatingsError(null);
-    try {
-      const ratings = await ratingsApi.getRatingsByMovieId(movieId);
-      const ownRating =
-        ratings.find((rating) => rating.userId === user?.id) || null;
-      setMovieRatings(ratings);
-      setOwnRating(ownRating);
-    } catch (error: unknown) {
-      console.error("Error fetching movie ratings:", error);
-      setRatingsError(
-        (error as Error).message || "Failed to load movie ratings.",
-      );
-    } finally {
-      setRatingsLoading(false);
-    }
-  }, []);
+  const fetchMovieRatings = useCallback(
+    async (movieId: number) => {
+      setRatingsLoading(true);
+      setRatingsError(null);
+      try {
+        const ratings = await ratingsApi.getRatingsByMovieId(movieId);
+        const ownRating =
+          ratings.find((rating) => rating.userId === user?.id) || null;
+
+        setMovieRatings(ratings);
+        setOwnRating(ownRating);
+      } catch (error: unknown) {
+        console.error((error as Error).message);
+      } finally {
+        setRatingsLoading(false);
+      }
+    },
+    [user],
+  );
 
   useEffect(() => {
     if (!movie) {
@@ -70,10 +69,10 @@ const MovieDetail = ({ movie, fallbackId }: Props) => {
       [movie.id]: movie.title,
     });
 
-    if (movie.id && isLoggedIn) {
+    if (movie.id && isLoggedIn && user?.id) {
       fetchMovieRatings(movie.id);
     }
-  }, [fallbackId, movie, setBreadcrumb, fetchMovieRatings, isLoggedIn]);
+  }, [fallbackId, movie, setBreadcrumb, fetchMovieRatings, isLoggedIn, user]);
 
   if (!movie) {
     throw new Error("Movie not found");
@@ -176,9 +175,7 @@ const MovieDetail = ({ movie, fallbackId }: Props) => {
     }
   };
 
-  const posterPath = movie.posterUrl
-    ? `${TMDB_IMAGE_BASE_URL}${movie.posterUrl}`
-    : null;
+  const posterPath = movie.posterUrl ? `${movie.posterUrl}` : null;
 
   return (
     <div className="flex max-w-[500px] flex-col gap-4">
@@ -257,12 +254,16 @@ const MovieDetail = ({ movie, fallbackId }: Props) => {
 
       {isLoggedIn && (
         <div className="mt-8 rounded-lg border p-4 shadow-sm">
-          <h2 className="mb-4 text-2xl font-semibold">
-            Reviews
-            {movieRatings?.length && (
-              <span className="text-secondary ml-2">{movieRatings.length}</span>
-            )}
-          </h2>
+          {movieRatings.length ? (
+            <h2 className="mb-4 text-2xl font-semibold">
+              Reviews
+              {movieRatings?.length && (
+                <span className="text-secondary ml-2">
+                  {movieRatings.length}
+                </span>
+              )}
+            </h2>
+          ) : null}
           {ownRating && (
             <div key={ownRating.id} className="border-b pb-3 last:border-b-0">
               <div className="mb-1 flex items-center justify-between">
